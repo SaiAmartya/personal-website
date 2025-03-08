@@ -1,0 +1,148 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="mb-4">Admin Dashboard</h1>
+        
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="card bg-primary text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase">Projects</h6>
+                                <h2 class="mb-0">{{ project_count }}</h2>
+                            </div>
+                            <i class="fas fa-code fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="{{ url_for('admin.projects') }}" class="text-white">Manage Projects <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4">
+                <div class="card bg-success text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase">Accomplishments</h6>
+                                <h2 class="mb-0">{{ accomplishment_count }}</h2>
+                            </div>
+                            <i class="fas fa-award fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="{{ url_for('admin.accomplishments') }}" class="text-white">Manage Accomplishments <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4">
+                <div class="card bg-info text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase">Blog Posts</h6>
+                                <h2 class="mb-0">{{ blog_count }}</h2>
+                            </div>
+                            <i class="fas fa-blog fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="{{ url_for('admin.blog_posts') }}" class="text-white">Manage Blog Posts <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4">
+                <div class="card bg-warning text-white h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase">Messages</h6>
+                                <h2 class="mb-0">{{ message_count }}</h2>
+                            </div>
+                            <i class="fas fa-envelope fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="{{ url_for('admin.messages') }}" class="text-white">View Messages <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Recent Messages</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_messages %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Subject</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for message in recent_messages %}
+                                    <tr>
+                                        <td>{{ message.name }}</td>
+                                        <td>{{ message.email }}</td>
+                                        <td>{{ message.subject }}</td>
+                                        <td>{{ message.created_at.strftime('%Y-%m-%d %H:%M') if message.created_at else '' }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#messageModal{{ message._id }}">
+                                                View
+                                            </button>
+                                            
+                                            <!-- Message Modal -->
+                                            <div class="modal fade" id="messageModal{{ message._id }}" tabindex="-1" aria-labelledby="messageModalLabel{{ message._id }}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="messageModalLabel{{ message._id }}">{{ message.subject }}</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p><strong>From:</strong> {{ message.name }} ({{ message.email }})</p>
+                                                            <p><strong>Date:</strong> {{ message.created_at.strftime('%Y-%m-%d %H:%M') if message.created_at else '' }}</p>
+                                                            <hr>
+                                                            <p>{{ message.message }}</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <a href="mailto:{{ message.email }}" class="btn btn-primary">Reply</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-end mt-3">
+                        <a href="{{ url_for('admin.messages') }}" class="btn btn-outline-primary">View All Messages</a>
+                    </div>
+                {% else %}
+                    <p class="text-center text-muted">No messages to display.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
