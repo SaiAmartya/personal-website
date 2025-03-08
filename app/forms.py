@@ -16,6 +16,7 @@ class ContactForm(FlaskForm):
 
 class ProjectForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=2, max=100)])
+    brief_description = TextAreaField('Brief Description', validators=[DataRequired(), Length(min=10, max=200)])
     description = TextAreaField('Description', validators=[DataRequired(), Length(min=10, max=5000)])
     image = FileField('Image', validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'])])
     link = URLField('Project Link', validators=[Optional()])
@@ -24,6 +25,7 @@ class ProjectForm(FlaskForm):
 
 class AccomplishmentForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=2, max=100)])
+    brief_description = TextAreaField('Brief Description', validators=[DataRequired(), Length(min=10, max=200)])
     description = TextAreaField('Description', validators=[DataRequired(), Length(min=10, max=5000)])
     date = DateField('Date', validators=[DataRequired()])
     image = FileField('Image', validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'])])
@@ -38,6 +40,7 @@ class AccomplishmentForm(FlaskForm):
 
 class BlogPostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=2, max=100)])
+    brief_description = TextAreaField('Brief Description', validators=[DataRequired(), Length(min=10, max=200)])
     content = TextAreaField('Content', validators=[DataRequired(), Length(min=10)])
     image = FileField('Image', validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'])])
     tags = StringField('Tags (comma separated)', validators=[Optional()])

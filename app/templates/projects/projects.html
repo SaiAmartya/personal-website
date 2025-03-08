@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="mb-4">Projects</h1>
+            
+            <div class="row">
+                {% if projects %}
+                    {% for project in projects %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                {% if project.image_url %}
+                                    <img src="{{ url_for('static', filename=project.image_url) }}" class="card-img-top" alt="{{ project.title }}">
+                                {% else %}
+                                    <div class="bg-light text-center py-5">
+                                        <i class="fas fa-code fa-3x text-secondary"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ project.title }}</h5>
+                                    <p class="card-text">{{ project.brief_description }}</p>
+                                    
+                                    {% if project.technologies %}
+                                        <div class="mb-3">
+                                            {% for tech in project.technologies %}
+                                                <span class="badge bg-light text-dark me-1">{{ tech }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer bg-white border-top-0">
+                                    <a href="{{ url_for('projects.project_detail', project_id=project._id) }}" class="btn btn-sm btn-outline-primary">Learn More</a>
+                                    {% if project.link %}
+                                        <a href="{{ project.link }}" target="_blank" class="btn btn-sm btn-outline-secondary">Visit Project</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 text-center py-5">
+                        <div class="py-5">
+                            <i class="fas fa-folder-open fa-4x text-muted mb-4"></i>
+                            <h3>No Projects Yet</h3>
+                            <p class="text-muted">Check back soon for exciting projects!</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">About My Projects</h5>
+                </div>
+                <div class="card-body">
+                    <p>Welcome to my projects showcase! Here you'll find a diverse collection of my work, including:</p>
+                    <ul>
+                        <li>Software development projects</li>
+                        <li>STEM competition entries</li>
+                        <li>Research and academic projects</li>
+                        <li>Creative and collaborative initiatives</li>
+                    </ul>
+                    <p>Each project represents a unique challenge I've tackled, showcasing my skills, creativity, and problem-solving abilities. Feel free to explore and learn more about the work I'm passionate about!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 class Project:
     def __init__(self, project_data=None):
@@ -7,6 +7,7 @@ class Project:
         
         self.id = str(project_data.get('_id', ''))
         self.title = project_data.get('title', '')
+        self.brief_description = project_data.get('brief_description', '')
         self.description = project_data.get('description', '')
         self.image_url = project_data.get('image_url', '')
         self.link = project_data.get('link', '')
@@ -16,6 +17,7 @@ class Project:
     def to_dict(self):
         return {
             'title': self.title,
+            'brief_description': self.brief_description,
             'description': self.description,
             'image_url': self.image_url,
             'link': self.link,
@@ -30,6 +32,7 @@ class Accomplishment:
         
         self.id = str(accomplishment_data.get('_id', ''))
         self.title = accomplishment_data.get('title', '')
+        self.brief_description = accomplishment_data.get('brief_description', '')
         self.description = accomplishment_data.get('description', '')
         self.date = accomplishment_data.get('date', datetime.now())
         self.image_url = accomplishment_data.get('image_url', '')
@@ -37,10 +40,17 @@ class Accomplishment:
         self.created_at = accomplishment_data.get('created_at', datetime.now())
     
     def to_dict(self):
+        # Convert date to datetime if it's a date object
+        date_value = self.date
+        if isinstance(date_value, date) and not isinstance(date_value, datetime):
+            # Convert to datetime at midnight
+            date_value = datetime.combine(date_value, datetime.min.time())
+        
         return {
             'title': self.title,
+            'brief_description': self.brief_description,
             'description': self.description,
-            'date': self.date,
+            'date': date_value,
             'image_url': self.image_url,
             'category': self.category,
             'created_at': self.created_at
@@ -53,6 +63,7 @@ class BlogPost:
         
         self.id = str(blog_data.get('_id', ''))
         self.title = blog_data.get('title', '')
+        self.brief_description = blog_data.get('brief_description', '')
         self.content = blog_data.get('content', '')
         self.image_url = blog_data.get('image_url', '')
         self.tags = blog_data.get('tags', [])
@@ -62,6 +73,7 @@ class BlogPost:
     def to_dict(self):
         return {
             'title': self.title,
+            'brief_description': self.brief_description,
             'content': self.content,
             'image_url': self.image_url,
             'tags': self.tags,

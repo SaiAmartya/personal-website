@@ -1,0 +1,89 @@
+{% extends "admin/layout.html" %}
+
+{% block admin_content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="fw-bold">Manage Profile Image</h1>
+            <p class="text-muted">Upload or update your profile image that will be displayed on the home page.</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4">Upload Profile Image</h5>
+                    
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label for="profile_image" class="form-label">Select Image (1:1 ratio recommended)</label>
+                            <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*" required>
+                            <div class="form-text">Upload a square image for best results. The image will be displayed as a circle.</div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Upload Image</button>
+                    </form>
+                </div>
+            </div>
+            
+            {% if profile_image %}
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4">Remove Current Image</h5>
+                    <p>If you want to remove the current profile image without replacing it, click the button below.</p>
+                    
+                    <form method="POST">
+                        <input type="hidden" name="remove_image" value="true">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to remove your profile image?');">Remove Image</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4">Current Profile Image</h5>
+                    
+                    <div class="text-center">
+                        {% if profile_image %}
+                            <div class="mb-3">
+                                <img src="{{ url_for('static', filename=profile_image) }}" alt="Profile Image" class="img-fluid rounded-circle border" style="width: 200px; height: 200px; object-fit: cover;">
+                            </div>
+                            <p class="text-success">Your profile image is currently set and will be displayed on the home page.</p>
+                        {% else %}
+                            <div class="mb-3 bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 200px; height: 200px;">
+                                <i class="fas fa-user fa-4x text-muted"></i>
+                            </div>
+                            <p class="text-muted">No profile image is currently set. A placeholder will be shown instead.</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h6>Preview on Home Page</h6>
+                        <div class="border p-3 rounded">
+                            <div class="row align-items-center">
+                                <div class="col-4">
+                                    {% if profile_image %}
+                                        <img src="{{ url_for('static', filename=profile_image) }}" alt="Profile Image" class="img-fluid rounded-circle border" style="width: 80px; height: 80px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                            <i class="fas fa-user fa-2x text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-8">
+                                    <h5 class="mb-1">Hi!, I'm Sai Amartya</h5>
+                                    <p class="small text-muted mb-0">Welcome to my personal website...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

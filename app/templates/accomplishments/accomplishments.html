@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Accomplishments</h1>
+                
+                {% if categories %}
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Filter by Category
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                        <li><a class="dropdown-item {% if selected_category == 'all' %}active{% endif %}" href="{{ url_for('accomplishments.accomplishments_page') }}">All Categories</a></li>
+                        {% for category in categories %}
+                            <li><a class="dropdown-item {% if selected_category == category %}active{% endif %}" href="{{ url_for('accomplishments.accomplishments_page', category=category) }}">{{ category|capitalize }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="row">
+                {% if accomplishments %}
+                    {% for accomplishment in accomplishments %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                {% if accomplishment.image_url %}
+                                    <img src="{{ url_for('static', filename=accomplishment.image_url) }}" class="card-img-top" alt="{{ accomplishment.title }}">
+                                {% else %}
+                                    <div class="bg-light text-center py-5">
+                                        <i class="fas fa-award fa-3x text-secondary"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="badge bg-primary">{{ accomplishment.category|capitalize }}</span>
+                                        <small class="text-muted">{{ accomplishment.date.strftime('%b %Y') if accomplishment.date else '' }}</small>
+                                    </div>
+                                    <h5 class="card-title">{{ accomplishment.title }}</h5>
+                                    <p class="card-text">{{ accomplishment.brief_description }}</p>
+                                </div>
+                                <div class="card-footer bg-white border-top-0">
+                                    <a href="{{ url_for('accomplishments.accomplishment_detail', accomplishment_id=accomplishment._id) }}" class="btn btn-sm btn-outline-primary">Learn More</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 text-center py-5">
+                        <div class="py-5">
+                            <i class="fas fa-trophy fa-4x text-muted mb-4"></i>
+                            <h3>No Accomplishments Yet</h3>
+                            <p class="text-muted">Check back soon for achievements and milestones!</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">About My Accomplishments</h5>
+                </div>
+                <div class="card-body">
+                    <p>Welcome to my accomplishments page! This section showcases my achievements, milestones, and recognition across various domains:</p>
+                    <ul>
+                        <li><strong>Awards:</strong> Honors and recognition received for outstanding work</li>
+                        <li><strong>Education:</strong> Academic achievements and educational milestones</li>
+                        <li><strong>Publications:</strong> Research papers, articles, and other published works</li>
+                    </ul>
+                    <p>Each accomplishment represents a significant step in my personal and professional journey. Browse through the categories to learn more about my achievements in different areas!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

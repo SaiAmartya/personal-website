@@ -18,9 +18,9 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-frosted">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ url_for('main.home') }}">Sai Amartya</a>
+            <a class="navbar-brand" href="{{ url_for('main.home') }}">Sai Amartya</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -34,6 +34,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.path.startswith('/accomplishments') %}active{% endif %}" href="{{ url_for('accomplishments.accomplishments_page') }}">Accomplishments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path.startswith('/extracurricular') %}active{% endif %}" href="{{ url_for('extracurricular.extracurricular_page') }}">Extracurricular</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.path.startswith('/blog') %}active{% endif %}" href="{{ url_for('blog.blog_page') }}">Blog</a>
@@ -79,7 +82,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <h5>Sai Amartya</h5>
-                    <p>A passionate professional showcasing projects, accomplishments, and thoughts.</p>
+                    <p>A passionate high school student at Cameron Heights Collegiate Institute, showcasing projects, accomplishments, and thoughts.</p>
                 </div>
                 <div class="col-md-4">
                     <h5>Contact</h5>
@@ -94,6 +97,7 @@
                         <li><a href="{{ url_for('main.home') }}" class="text-white">Home</a></li>
                         <li><a href="{{ url_for('projects.projects_page') }}" class="text-white">Projects</a></li>
                         <li><a href="{{ url_for('accomplishments.accomplishments_page') }}" class="text-white">Accomplishments</a></li>
+                        <li><a href="{{ url_for('extracurricular.extracurricular_page') }}" class="text-white">Extracurricular</a></li>
                         <li><a href="{{ url_for('blog.blog_page') }}" class="text-white">Blog</a></li>
                         <li><a href="{{ url_for('contact.contact_page') }}" class="text-white">Contact</a></li>
                     </ul>
@@ -101,7 +105,7 @@
             </div>
             <hr>
             <div class="text-center">
-                <p>&copy; {{ now.year }} Sai Amartya. All rights reserved.</p>
+                <p>&copy; <span id="current-year"></span>Sai Amartya. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -111,6 +115,11 @@
     
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
     
     {% block scripts %}{% endblock %}
 </body>

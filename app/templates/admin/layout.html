@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Admin Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-3">
+            <div class="position-sticky">
+                <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Admin Panel</span>
+                </h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == url_for('admin.dashboard') %}active{% endif %}" href="{{ url_for('admin.dashboard') }}">
+                            <i class="fas fa-tachometer-alt me-2"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path.startswith('/admin/projects') %}active{% endif %}" href="{{ url_for('admin.projects') }}">
+                            <i class="fas fa-code me-2"></i>
+                            Projects
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path.startswith('/admin/accomplishments') %}active{% endif %}" href="{{ url_for('admin.accomplishments') }}">
+                            <i class="fas fa-award me-2"></i>
+                            Accomplishments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path.startswith('/admin/blog') %}active{% endif %}" href="{{ url_for('admin.blog_posts') }}">
+                            <i class="fas fa-blog me-2"></i>
+                            Blog Posts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path.startswith('/admin/messages') %}active{% endif %}" href="{{ url_for('admin.messages') }}">
+                            <i class="fas fa-envelope me-2"></i>
+                            Messages
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path.startswith('/admin/profile-image') %}active{% endif %}" href="{{ url_for('admin.profile_image') }}">
+                            <i class="fas fa-user-circle me-2"></i>
+                            Profile Image
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('extracurricular.extracurricular_page') }}">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            Extracurricular
+                        </a>
+                    </li>
+                </ul>
+                
+                <hr>
+                
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.home') }}">
+                            <i class="fas fa-home me-2"></i>
+                            Back to Site
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                            <i class="fas fa-sign-out-alt me-2"></i>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            {% block admin_content %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

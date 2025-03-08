@@ -1,22 +1,39 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, session
 from flask_login import login_required, current_user
 from app.forms import ProjectForm, AccomplishmentForm, BlogPostForm
 from app.models.content import Project, Accomplishment, BlogPost
 from app.utils import save_image
 from bson.objectid import ObjectId
-from datetime import datetime
+from datetime import datetime, date
+import logging
+from functools import wraps
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 
-@admin.before_request
-def check_admin():
-    if not current_user.is_authenticated or not current_user.is_admin:
-        flash('You do not have permission to access this page', 'danger')
-        return redirect(url_for('main.home'))
+# Add a custom admin_required decorator
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        print(f"Admin check in decorator - current_user: {current_user}")
+        print(f"Admin check in decorator - is_authenticated: {current_user.is_authenticated}, is_admin: {getattr(current_user, 'is_admin', False)}")
+        
+        if not current_user.is_authenticated:
+            print("User is not authenticated, redirecting to login")
+            flash('Please log in to access this page', 'warning')
+            return redirect(url_for('auth.login', next=request.url))
+            
+        if not getattr(current_user, 'is_admin', False):
+            print("User is not admin, redirecting to home")
+            flash('You do not have permission to access this page', 'danger')
+            return redirect(url_for('main.home'))
+            
+        print("User is admin, proceeding to view")
+        return f(*args, **kwargs)
+    return decorated_function
 
 @admin.route('/')
 @admin.route('/dashboard')
-@login_required
+@admin_required
 def dashboard():
     # Count items in each collection
     project_count = current_app.db.projects.count_documents({})
@@ -37,18 +54,23 @@ def dashboard():
 
 # Project routes
 @admin.route('/projects')
-@login_required
+@admin_required
 def projects():
     projects = list(current_app.db.projects.find().sort('created_at', -1))
     return render_template('admin/projects.html', title='Manage Projects', projects=projects)
 
 @admin.route('/projects/new', methods=['GET', 'POST'])
-@login_required
+@admin_required
 def new_project():
     form = ProjectForm()
+    
+    if request.method == 'POST':
+        print("Form submitted with data:", request.form)
+        
     if form.validate_on_submit():
         project = Project()
         project.title = form.title.data
+        project.brief_description = form.brief_description.data
         project.description = form.description.data
         project.link = form.link.data
         project.technologies = [tech.strip() for tech in form.technologies.data.split(',') if tech.strip()]
@@ -60,11 +82,16 @@ def new_project():
         current_app.db.projects.insert_one(project.to_dict())
         flash('Project created successfully!', 'success')
         return redirect(url_for('admin.projects'))
+    elif request.method == 'POST':
+        print("Form validation errors:", form.errors)
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"{field}: {error}", 'danger')
     
     return render_template('admin/project_form.html', title='New Project', form=form, legend='New Project')
 
 @admin.route('/projects/<project_id>/edit', methods=['GET', 'POST'])
-@login_required
+@admin_required
 def edit_project(project_id):
     project_data = current_app.db.projects.find_one({'_id': ObjectId(project_id)})
     if not project_data:
@@ -77,6 +104,7 @@ def edit_project(project_id):
     if form.validate_on_submit():
         update_data = {
             'title': form.title.data,
+            'brief_description': form.brief_description.data,
             'description': form.description.data,
             'link': form.link.data,
             'technologies': [tech.strip() for tech in form.technologies.data.split(',') if tech.strip()]
@@ -91,6 +119,7 @@ def edit_project(project_id):
     
     if request.method == 'GET':
         form.title.data = project.title
+        form.brief_description.data = project.brief_description
         form.description.data = project.description
         form.link.data = project.link
         form.technologies.data = ', '.join(project.technologies)
@@ -98,7 +127,7 @@ def edit_project(project_id):
     return render_template('admin/project_form.html', title='Edit Project', form=form, legend='Edit Project', project=project)
 
 @admin.route('/projects/<project_id>/delete', methods=['POST'])
-@login_required
+@admin_required
 def delete_project(project_id):
     current_app.db.projects.delete_one({'_id': ObjectId(project_id)})
     flash('Project deleted successfully!', 'success')
@@ -106,20 +135,28 @@ def delete_project(project_id):
 
 # Accomplishment routes
 @admin.route('/accomplishments')
-@login_required
+@admin_required
 def accomplishments():
     accomplishments = list(current_app.db.accomplishments.find().sort('date', -1))
     return render_template('admin/accomplishments.html', title='Manage Accomplishments', accomplishments=accomplishments)
 
 @admin.route('/accomplishments/new', methods=['GET', 'POST'])
-@login_required
+@admin_required
 def new_accomplishment():
     form = AccomplishmentForm()
     if form.validate_on_submit():
         accomplishment = Accomplishment()
         accomplishment.title = form.title.data
+        accomplishment.brief_description = form.brief_description.data
         accomplishment.description = form.description.data
-        accomplishment.date = form.date.data
+        
+        # Convert date to datetime if it's a date object
+        date_value = form.date.data
+        if isinstance(date_value, date) and not isinstance(date_value, datetime):
+            # Convert to datetime at midnight
+            date_value = datetime.combine(date_value, datetime.min.time())
+        accomplishment.date = date_value
+        
         accomplishment.category = form.category.data
         accomplishment.created_at = datetime.now()
         
@@ -133,7 +170,7 @@ def new_accomplishment():
     return render_template('admin/accomplishment_form.html', title='New Accomplishment', form=form, legend='New Accomplishment')
 
 @admin.route('/accomplishments/<accomplishment_id>/edit', methods=['GET', 'POST'])
-@login_required
+@admin_required
 def edit_accomplishment(accomplishment_id):
     accomplishment_data = current_app.db.accomplishments.find_one({'_id': ObjectId(accomplishment_id)})
     if not accomplishment_data:
@@ -144,10 +181,17 @@ def edit_accomplishment(accomplishment_id):
     form = AccomplishmentForm()
     
     if form.validate_on_submit():
+        # Convert date to datetime if it's a date object
+        date_value = form.date.data
+        if isinstance(date_value, date) and not isinstance(date_value, datetime):
+            # Convert to datetime at midnight
+            date_value = datetime.combine(date_value, datetime.min.time())
+            
         update_data = {
             'title': form.title.data,
+            'brief_description': form.brief_description.data,
             'description': form.description.data,
-            'date': form.date.data,
+            'date': date_value,
             'category': form.category.data
         }
         
@@ -160,14 +204,15 @@ def edit_accomplishment(accomplishment_id):
     
     if request.method == 'GET':
         form.title.data = accomplishment.title
+        form.brief_description.data = accomplishment.brief_description
         form.description.data = accomplishment.description
-        form.date.data = accomplishment.date if isinstance(accomplishment.date, datetime) else None
+        form.date.data = accomplishment.date
         form.category.data = accomplishment.category
     
     return render_template('admin/accomplishment_form.html', title='Edit Accomplishment', form=form, legend='Edit Accomplishment', accomplishment=accomplishment)
 
 @admin.route('/accomplishments/<accomplishment_id>/delete', methods=['POST'])
-@login_required
+@admin_required
 def delete_accomplishment(accomplishment_id):
     current_app.db.accomplishments.delete_one({'_id': ObjectId(accomplishment_id)})
     flash('Accomplishment deleted successfully!', 'success')
@@ -175,34 +220,35 @@ def delete_accomplishment(accomplishment_id):
 
 # Blog routes
 @admin.route('/blog')
-@login_required
+@admin_required
 def blog_posts():
     blog_posts = list(current_app.db.blog_posts.find().sort('created_at', -1))
     return render_template('admin/blog_posts.html', title='Manage Blog Posts', blog_posts=blog_posts)
 
 @admin.route('/blog/new', methods=['GET', 'POST'])
-@login_required
+@admin_required
 def new_blog_post():
     form = BlogPostForm()
     if form.validate_on_submit():
-        blog_post = BlogPost()
-        blog_post.title = form.title.data
-        blog_post.content = form.content.data
-        blog_post.tags = [tag.strip() for tag in form.tags.data.split(',') if tag.strip()]
-        blog_post.created_at = datetime.now()
-        blog_post.updated_at = datetime.now()
+        post = BlogPost()
+        post.title = form.title.data
+        post.brief_description = form.brief_description.data
+        post.content = form.content.data
+        post.tags = [tag.strip() for tag in form.tags.data.split(',') if tag.strip()]
+        post.created_at = datetime.now()
+        post.updated_at = datetime.now()
         
         if form.image.data:
-            blog_post.image_url = save_image(form.image.data, 'images/blog')
+            post.image_url = save_image(form.image.data, 'images/blog')
         
-        current_app.db.blog_posts.insert_one(blog_post.to_dict())
+        current_app.db.blog_posts.insert_one(post.to_dict())
         flash('Blog post created successfully!', 'success')
         return redirect(url_for('admin.blog_posts'))
     
     return render_template('admin/blog_form.html', title='New Blog Post', form=form, legend='New Blog Post')
 
 @admin.route('/blog/<post_id>/edit', methods=['GET', 'POST'])
-@login_required
+@admin_required
 def edit_blog_post(post_id):
     post_data = current_app.db.blog_posts.find_one({'_id': ObjectId(post_id)})
     if not post_data:
@@ -215,6 +261,7 @@ def edit_blog_post(post_id):
     if form.validate_on_submit():
         update_data = {
             'title': form.title.data,
+            'brief_description': form.brief_description.data,
             'content': form.content.data,
             'tags': [tag.strip() for tag in form.tags.data.split(',') if tag.strip()],
             'updated_at': datetime.now()
@@ -229,13 +276,14 @@ def edit_blog_post(post_id):
     
     if request.method == 'GET':
         form.title.data = post.title
+        form.brief_description.data = post.brief_description
         form.content.data = post.content
         form.tags.data = ', '.join(post.tags)
     
     return render_template('admin/blog_form.html', title='Edit Blog Post', form=form, legend='Edit Blog Post', post=post)
 
 @admin.route('/blog/<post_id>/delete', methods=['POST'])
-@login_required
+@admin_required
 def delete_blog_post(post_id):
     current_app.db.blog_posts.delete_one({'_id': ObjectId(post_id)})
     flash('Blog post deleted successfully!', 'success')
@@ -243,14 +291,45 @@ def delete_blog_post(post_id):
 
 # Messages
 @admin.route('/messages')
-@login_required
+@admin_required
 def messages():
     messages = list(current_app.db.contact_messages.find().sort('created_at', -1))
     return render_template('admin/messages.html', title='Contact Messages', messages=messages)
 
 @admin.route('/messages/<message_id>/delete', methods=['POST'])
-@login_required
+@admin_required
 def delete_message(message_id):
     current_app.db.contact_messages.delete_one({'_id': ObjectId(message_id)})
     flash('Message deleted successfully!', 'success')
-    return redirect(url_for('admin.messages')) 
+    return redirect(url_for('admin.messages'))
+
+@admin.route('/profile-image', methods=['GET', 'POST'])
+@admin_required
+def profile_image():
+    current_image = current_app.db.site_settings.find_one({"setting_name": "profile_image"})
+    profile_image = current_image.get("value") if current_image else None
+    
+    if request.method == 'POST':
+        if 'profile_image' in request.files and request.files['profile_image'].filename:
+            # Save the new image
+            image_path = save_image(request.files['profile_image'], 'profile')
+            
+            # Update or insert the profile image setting
+            current_app.db.site_settings.update_one(
+                {"setting_name": "profile_image"},
+                {"$set": {"value": image_path, "updated_at": datetime.utcnow()}},
+                upsert=True
+            )
+            
+            flash('Profile image updated successfully!', 'success')
+            return redirect(url_for('admin.profile_image'))
+        
+        elif 'remove_image' in request.form:
+            # Remove the profile image setting
+            current_app.db.site_settings.delete_one({"setting_name": "profile_image"})
+            flash('Profile image removed successfully!', 'success')
+            return redirect(url_for('admin.profile_image'))
+    
+    return render_template('admin/profile_image.html', 
+                          title='Manage Profile Image',
+                          profile_image=profile_image) 

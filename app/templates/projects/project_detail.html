@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('projects.projects_page') }}">Projects</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ project.title }}</li>
+                </ol>
+            </nav>
+            
+            <div class="card border-0 shadow-sm mb-4">
+                {% if project.image_url %}
+                    <img src="{{ url_for('static', filename=project.image_url) }}" class="card-img-top" alt="{{ project.title }}">
+                {% else %}
+                    <div class="bg-light text-center py-5">
+                        <i class="fas fa-code fa-5x text-secondary"></i>
+                    </div>
+                {% endif %}
+                
+                <div class="card-body p-4">
+                    <h1 class="card-title mb-3">{{ project.title }}</h1>
+                    
+                    {% if project.technologies %}
+                        <div class="mb-4">
+                            {% for tech in project.technologies %}
+                                <span class="technology-badge">{{ tech }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-text mb-4">
+                        {{ project.description|safe }}
+                    </div>
+                    
+                    {% if project.link %}
+                        <a href="{{ project.link }}" target="_blank" class="btn btn-primary">
+                            <i class="fas fa-external-link-alt me-2"></i>Visit Project
+                        </a>
+                    {% endif %}
+                </div>
+                
+                <div class="card-footer bg-white text-muted">
+                    <small>Added on {{ project.created_at.strftime('%B %d, %Y') if project.created_at else '' }}</small>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('projects.projects_page') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Projects
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
