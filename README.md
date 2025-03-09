@@ -51,6 +51,7 @@ A personal "brag website" to showcase projects, accomplishments, and blog posts.
    ADMIN_PASSWORD=your_admin_password
    EMAIL_USER=your_email@example.com
    EMAIL_PASSWORD=your_email_password
+   TINYMCE_API_KEY=your_api_key_here
    ```
 
 4. Run the application:

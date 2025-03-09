@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, session
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, session, jsonify
 from flask_login import login_required, current_user
 from app.forms import ProjectForm, AccomplishmentForm, BlogPostForm
 from app.models.content import Project, Accomplishment, BlogPost
@@ -56,7 +56,8 @@ def dashboard():
 @admin.route('/projects')
 @admin_required
 def projects():
-    projects = list(current_app.db.projects.find().sort('created_at', -1))
+    # Sort by display_order first, then by created_at as a fallback
+    projects = list(current_app.db.projects.find().sort([('display_order', 1), ('created_at', -1)]))
     return render_template('admin/projects.html', title='Manage Projects', projects=projects)
 
 @admin.route('/projects/new', methods=['GET', 'POST'])
@@ -133,11 +134,35 @@ def delete_project(project_id):
     flash('Project deleted successfully!', 'success')
     return redirect(url_for('admin.projects'))
 
+@admin.route('/projects/update-order', methods=['POST'])
+@admin_required
+def update_project_order():
+    try:
+        data = request.json
+        projects = data.get('projects', [])
+        
+        # Update each project with its new display order
+        for project in projects:
+            project_id = project.get('id')
+            order = project.get('order')
+            
+            if project_id and order is not None:
+                current_app.db.projects.update_one(
+                    {'_id': ObjectId(project_id)},
+                    {'$set': {'display_order': order}}
+                )
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        print(f"Error updating project order: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)})
+
 # Accomplishment routes
 @admin.route('/accomplishments')
 @admin_required
 def accomplishments():
-    accomplishments = list(current_app.db.accomplishments.find().sort('date', -1))
+    # Sort by display_order first, then by date as a fallback
+    accomplishments = list(current_app.db.accomplishments.find().sort([('display_order', 1), ('date', -1)]))
     return render_template('admin/accomplishments.html', title='Manage Accomplishments', accomplishments=accomplishments)
 
 @admin.route('/accomplishments/new', methods=['GET', 'POST'])
@@ -218,11 +243,35 @@ def delete_accomplishment(accomplishment_id):
     flash('Accomplishment deleted successfully!', 'success')
     return redirect(url_for('admin.accomplishments'))
 
+@admin.route('/accomplishments/update-order', methods=['POST'])
+@admin_required
+def update_accomplishment_order():
+    try:
+        data = request.json
+        accomplishments = data.get('accomplishments', [])
+        
+        # Update each accomplishment with its new display order
+        for accomplishment in accomplishments:
+            accomplishment_id = accomplishment.get('id')
+            order = accomplishment.get('order')
+            
+            if accomplishment_id and order is not None:
+                current_app.db.accomplishments.update_one(
+                    {'_id': ObjectId(accomplishment_id)},
+                    {'$set': {'display_order': order}}
+                )
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        print(f"Error updating accomplishment order: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)})
+
 # Blog routes
 @admin.route('/blog')
 @admin_required
 def blog_posts():
-    blog_posts = list(current_app.db.blog_posts.find().sort('created_at', -1))
+    # Sort by display_order first, then by created_at as a fallback
+    blog_posts = list(current_app.db.blog_posts.find().sort([('display_order', 1), ('created_at', -1)]))
     return render_template('admin/blog_posts.html', title='Manage Blog Posts', blog_posts=blog_posts)
 
 @admin.route('/blog/new', methods=['GET', 'POST'])
@@ -289,6 +338,29 @@ def delete_blog_post(post_id):
     flash('Blog post deleted successfully!', 'success')
     return redirect(url_for('admin.blog_posts'))
 
+@admin.route('/blog/update-order', methods=['POST'])
+@admin_required
+def update_blog_post_order():
+    try:
+        data = request.json
+        blog_posts = data.get('blog_posts', [])
+        
+        # Update each blog post with its new display order
+        for post in blog_posts:
+            post_id = post.get('id')
+            order = post.get('order')
+            
+            if post_id and order is not None:
+                current_app.db.blog_posts.update_one(
+                    {'_id': ObjectId(post_id)},
+                    {'$set': {'display_order': order}}
+                )
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        print(f"Error updating blog post order: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)})
+
 # Messages
 @admin.route('/messages')
 @admin_required
@@ -332,4 +404,35 @@ def profile_image():
     
     return render_template('admin/profile_image.html', 
                           title='Manage Profile Image',
-                          profile_image=profile_image) 
+                          profile_image=profile_image)
+
+# Extracurricular Activities
+@admin.route('/activities')
+@admin_required
+def activities():
+    # Sort by display_order first, then by start_date as a fallback
+    activities = list(current_app.db.extracurricular.find().sort([('display_order', 1), ('start_date', -1)]))
+    return render_template('admin/activities.html', title='Manage Activities', activities=activities)
+
+@admin.route('/activities/update-order', methods=['POST'])
+@admin_required
+def update_activity_order():
+    try:
+        data = request.json
+        activities = data.get('activities', [])
+        
+        # Update each activity with its new display order
+        for activity in activities:
+            activity_id = activity.get('id')
+            order = activity.get('order')
+            
+            if activity_id and order is not None:
+                current_app.db.extracurricular.update_one(
+                    {'_id': ObjectId(activity_id)},
+                    {'$set': {'display_order': order}}
+                )
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        print(f"Error updating activity order: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}) 

@@ -6,7 +6,7 @@
         <div class="col-12 d-flex justify-content-between align-items-center">
             <div>
                 <h1 class="fw-bold">Blog Posts</h1>
-                <p class="text-muted">Manage your blog content.</p>
+                <p class="text-muted">Manage your blog content. Drag and drop to reorder.</p>
             </div>
             <div>
                 <a href="{{ url_for('admin.new_blog_post') }}" class="btn btn-info">
@@ -21,10 +21,14 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
                     {% if blog_posts %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> The first three blog posts will be displayed on the home page. Drag and drop to reorder.
+                        </div>
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-hover" id="blogPostsTable">
                                 <thead>
                                     <tr>
+                                        <th style="width: 50px;">Order</th>
                                         <th style="width: 60px;">Image</th>
                                         <th>Title</th>
                                         <th>Brief Description</th>
@@ -33,9 +37,15 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="blogPostsTableBody">
                                     {% for post in blog_posts %}
-                                        <tr>
+                                        <tr data-id="{{ post._id }}" class="{% if loop.index <= 3 %}table-active{% endif %}">
+                                            <td class="text-center">
+                                                <span class="order-handle" style="cursor: grab;">
+                                                    <i class="fas fa-grip-vertical"></i>
+                                                </span>
+                                                <span class="order-number">{{ loop.index }}</span>
+                                            </td>
                                             <td>
                                                 {% if post.image_url %}
                                                     <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.title }}" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
@@ -76,6 +86,11 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="mt-3">
+                            <button id="saveBlogPostOrder" class="btn btn-info">
+                                <i class="fas fa-save me-2"></i>Save Order
+                            </button>
+                        </div>
                     {% else %}
                         <div class="text-center py-5">
                             <i class="fas fa-blog fa-4x text-muted mb-3"></i>
@@ -91,4 +106,82 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% if blog_posts %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize sortable table
+        const blogPostsTableBody = document.getElementById('blogPostsTableBody');
+        const sortable = new Sortable(blogPostsTableBody, {
+            handle: '.order-handle',
+            animation: 150,
+            onEnd: function() {
+                // Update order numbers after drag
+                updateOrderNumbers();
+                // Highlight first three rows
+                highlightTopRows();
+            }
+        });
+
+        // Update order numbers
+        function updateOrderNumbers() {
+            const rows = blogPostsTableBody.querySelectorAll('tr');
+            rows.forEach((row, index) => {
+                const orderNumber = row.querySelector('.order-number');
+                orderNumber.textContent = index + 1;
+            });
+        }
+
+        // Highlight top 3 rows
+        function highlightTopRows() {
+            const rows = blogPostsTableBody.querySelectorAll('tr');
+            rows.forEach((row, index) => {
+                if (index < 3) {
+                    row.classList.add('table-active');
+                } else {
+                    row.classList.remove('table-active');
+                }
+            });
+        }
+
+        // Save order button
+        document.getElementById('saveBlogPostOrder').addEventListener('click', function() {
+            const rows = blogPostsTableBody.querySelectorAll('tr');
+            const orderData = [];
+            
+            rows.forEach((row, index) => {
+                orderData.push({
+                    id: row.dataset.id,
+                    order: index + 1
+                });
+            });
+
+            // Send order data to server
+            fetch('{{ url_for("admin.update_blog_post_order") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ blog_posts: orderData })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Blog post order updated successfully!');
+                } else {
+                    alert('Error updating blog post order: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating the blog post order.');
+            });
+        });
+    });
+</script>
+{% endif %}
 {% endblock %} 

@@ -5,11 +5,14 @@ main = Blueprint('main', __name__)
 @main.route('/')
 @main.route('/home')
 def home():
-    # Limit all sections to 3 items for the home page
-    projects = list(current_app.db.projects.find().sort('created_at', -1).limit(3))
-    accomplishments = list(current_app.db.accomplishments.find().sort('date', -1).limit(3))
-    blog_posts = list(current_app.db.blog_posts.find().sort('created_at', -1).limit(3))
-    activities = list(current_app.db.extracurricular.find().sort('start_date', -1).limit(3))
+    # Get projects sorted by display_order (or created_at if display_order not set)
+    projects = list(current_app.db.projects.find().sort([('display_order', 1), ('created_at', -1)]).limit(3))
+    # Get accomplishments sorted by display_order (or date if display_order not set)
+    accomplishments = list(current_app.db.accomplishments.find().sort([('display_order', 1), ('date', -1)]).limit(3))
+    # Get blog posts sorted by display_order (or created_at if display_order not set)
+    blog_posts = list(current_app.db.blog_posts.find().sort([('display_order', 1), ('created_at', -1)]).limit(3))
+    # Get activities sorted by display_order (or start_date if display_order not set)
+    activities = list(current_app.db.extracurricular.find().sort([('display_order', 1), ('start_date', -1)]).limit(3))
     
     # Get profile image if it exists
     site_settings = current_app.db.site_settings.find_one({"setting_name": "profile_image"})
