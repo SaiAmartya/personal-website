@@ -19,7 +19,7 @@
     --footer-bg: rgba(255, 255, 255, 0.7);
     --footer-color: var(--apple-dark);
     --footer-link-color: var(--apple-blue);
-    --navbar-bg: rgba(255, 255, 255, 0.7);
+    --navbar-bg: rgba(255, 255, 255, 0.6);
     --navbar-color: var(--apple-dark);
     --section-heading-color: var(--apple-dark);
     --hero-text-color: var(--apple-dark);
@@ -59,7 +59,7 @@
     --footer-bg: rgba(40, 40, 45, 0.7);
     --footer-color: var(--apple-light);
     --footer-link-color: #0a84ff;
-    --navbar-bg: rgba(40, 40, 45, 0.7);
+    --navbar-bg: rgba(40, 40, 45, 0.6);
     --navbar-color: var(--apple-light);
     --section-heading-color: var(--apple-light);
     --hero-text-color: var(--apple-light);
@@ -96,7 +96,7 @@ body {
     color: var(--body-color);
     line-height: 1.6;
     transition: background-image 0.3s ease, color 0.3s ease;
-    padding-top: 3.5rem; /* Add padding to account for fixed navbar */
+    padding-top: 5rem; /* Increased padding to account for floating navbar */
 }
 
 /* Profile Image */
@@ -136,15 +136,18 @@ body {
     background-color: var(--navbar-bg);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    max-width: 1400px;
     z-index: 1030;
-    padding: 0.75rem 0;
-    transition: background-color 0.3s ease;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
 }
 
 .navbar-frosted .navbar-brand {
@@ -202,7 +205,7 @@ body {
 .hero-section {
     padding: 6rem 0;
     text-align: center;
-    margin-top: 3.5rem; /* Add margin to account for fixed navbar */
+    margin-top: 1rem; /* Adjusted margin for floating navbar */
 }
 
 .hero-section h1 {
@@ -481,6 +484,12 @@ footer .social-icons a {
     
     .hero-section p.lead {
         font-size: 1.1rem;
+    }
+    
+    .navbar-frosted {
+        width: 92%;
+        top: 8px;
+        padding: 0.5rem 1rem;
     }
 }
 
