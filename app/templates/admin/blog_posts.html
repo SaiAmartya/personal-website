@@ -1,71 +1,91 @@
-{% extends "layout.html" %}
+{% extends "admin/layout.html" %}
 
-{% block content %}
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Manage Blog Posts</h1>
-        <a href="{{ url_for('admin.new_blog_post') }}" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>Add New Blog Post
-        </a>
+{% block admin_content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="fw-bold">Blog Posts</h1>
+                <p class="text-muted">Manage your blog content.</p>
+            </div>
+            <div>
+                <a href="{{ url_for('admin.new_blog_post') }}" class="btn btn-info">
+                    <i class="fas fa-plus me-2"></i>New Blog Post
+                </a>
+            </div>
+        </div>
     </div>
     
-    <div class="card border-0 shadow-sm">
-        <div class="card-body">
-            {% if blog_posts %}
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Tags</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for post in blog_posts %}
-                                <tr>
-                                    <td>{{ post.title }}</td>
-                                    <td>
-                                        {% if post.tags %}
-                                            {% for tag in post.tags %}
-                                                <span class="badge bg-light text-dark">{{ tag }}</span>
-                                            {% endfor %}
-                                        {% else %}
-                                            <span class="text-muted">None</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ post.created_at.strftime('%Y-%m-%d') if post.created_at else '' }}</td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ url_for('blog.blog_post_detail', post_id=post._id) }}" class="btn btn-sm btn-outline-primary" target="_blank">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ url_for('admin.edit_blog_post', post_id=post._id) }}" class="btn btn-sm btn-outline-secondary">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form action="{{ url_for('admin.delete_blog_post', post_id=post._id) }}" method="POST" class="d-inline">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger delete-btn" onclick="return confirm('Are you sure you want to delete this blog post?')">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    {% if blog_posts %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60px;">Image</th>
+                                        <th>Title</th>
+                                        <th>Brief Description</th>
+                                        <th>Tags</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for post in blog_posts %}
+                                        <tr>
+                                            <td>
+                                                {% if post.image_url %}
+                                                    <img src="{{ url_for('static', filename=post.image_url) }}" alt="{{ post.title }}" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                                                {% else %}
+                                                    <div class="bg-light d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                                        <i class="fas fa-blog text-muted"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ post.title }}</td>
+                                            <td>{{ post.brief_description }}</td>
+                                            <td>
+                                                {% if post.tags %}
+                                                    {% if post.tags is string %}
+                                                        {% for tag in post.tags.split(',') %}
+                                                            <span class="badge bg-info me-1">{{ tag.strip() }}</span>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        {% for tag in post.tags %}
+                                                            <span class="badge bg-info me-1">{{ tag }}</span>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ post.created_at.strftime('%Y-%m-%d') if post.created_at else '' }}</td>
+                                            <td>
+                                                <a href="{{ url_for('admin.edit_blog_post', post_id=post._id) }}" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
+                                                <a href="{{ url_for('admin.delete_blog_post', post_id=post._id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this blog post?');">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-blog fa-4x text-muted mb-3"></i>
+                            <h5>No Blog Posts</h5>
+                            <p class="text-muted">You haven't added any blog posts yet.</p>
+                            <a href="{{ url_for('admin.new_blog_post') }}" class="btn btn-info mt-3">
+                                <i class="fas fa-plus me-2"></i>Write Your First Blog Post
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
-            {% else %}
-                <div class="text-center py-5">
-                    <i class="fas fa-blog fa-4x text-muted mb-3"></i>
-                    <h3>No Blog Posts Yet</h3>
-                    <p class="text-muted">Get started by adding your first blog post.</p>
-                    <a href="{{ url_for('admin.new_blog_post') }}" class="btn btn-primary mt-2">
-                        <i class="fas fa-plus me-2"></i>Add New Blog Post
-                    </a>
-                </div>
-            {% endif %}
+            </div>
         </div>
     </div>
 </div>

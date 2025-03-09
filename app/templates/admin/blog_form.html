@@ -1,9 +1,9 @@
-{% extends "layout.html" %}
+{% extends "admin/layout.html" %}
 
-{% block content %}
-<div class="container">
+{% block admin_content %}
+<div class="container-fluid">
     <div class="row">
-        <div class="col-lg-8 mx-auto">
+        <div class="col-12">
             <nav aria-label="breadcrumb" class="mb-4">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
@@ -13,7 +13,7 @@
             </nav>
             
             <div class="card border-0 shadow-sm">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-info text-white">
                     <h4 class="mb-0">{{ legend }}</h4>
                 </div>
                 <div class="card-body">
@@ -76,7 +76,7 @@
                             {% else %}
                                 {{ form.tags(class="form-control") }}
                             {% endif %}
-                            <small class="form-text text-muted">Separate tags with commas (e.g., technology, programming, web development).</small>
+                            <small class="form-text text-muted">Separate tags with commas (e.g., Python, Web Development, Tutorial).</small>
                         </div>
                         
                         <div class="mb-3">
@@ -89,17 +89,17 @@
                                     {% endfor %}
                                 </div>
                             {% endif %}
-                            {% if post and post.image_url %}
+                            {% if blog_post and blog_post.image_url %}
                                 <div class="mt-2">
                                     <p>Current image:</p>
-                                    <img src="{{ url_for('static', filename=post.image_url) }}" alt="Current blog post image" class="img-thumbnail" style="max-height: 200px;">
+                                    <img src="{{ url_for('static', filename=blog_post.image_url) }}" alt="Current blog post image" class="img-thumbnail" style="max-height: 200px;">
                                 </div>
                             {% endif %}
                         </div>
                         
                         <div class="d-flex justify-content-between">
                             <a href="{{ url_for('admin.blog_posts') }}" class="btn btn-outline-secondary">Cancel</a>
-                            {{ form.submit(class="btn btn-primary") }}
+                            {{ form.submit(class="btn btn-info") }}
                         </div>
                     </form>
                 </div>

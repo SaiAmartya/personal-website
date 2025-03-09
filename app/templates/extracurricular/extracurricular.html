@@ -39,7 +39,13 @@
                             </div>
                             
                             <div class="mb-3">
-                                <span class="badge bg-primary">{{ activity.organization }}</span>
+                                <span class="badge bg-primary">
+                                    {% if activity.organization|length > 15 %}
+                                        {{ activity.organization[:15] }}...
+                                    {% else %}
+                                        {{ activity.organization }}
+                                    {% endif %}
+                                </span>
                                 <span class="badge bg-secondary ms-2">{{ activity.start_date }} - {{ activity.end_date }}</span>
                             </div>
                             

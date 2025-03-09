@@ -1,9 +1,33 @@
 /* Global Styles */
+:root {
+    --apple-dark: #1d1d1f;
+    --apple-darker: #000000;
+    --apple-light: #f5f5f7;
+    --apple-blue: #0071e3;
+    --apple-blue-hover: #0077ed;
+    --apple-gray: #86868b;
+    --apple-card-bg: rgba(255, 255, 255, 0.7);
+    --apple-card-dark-bg: rgba(40, 40, 45, 0.7);
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
-    background-color: #f8f9fa;
-    padding-top: 70px; /* Add padding to account for fixed navbar */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--apple-light);
+    background-color: var(--apple-dark);
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(50, 50, 60, 0.2) 2%, transparent 10%),
+        radial-gradient(circle at 75% 44%, rgba(50, 50, 60, 0.2) 2%, transparent 10%),
+        radial-gradient(circle at 46% 67%, rgba(50, 50, 60, 0.2) 2%, transparent 10%),
+        radial-gradient(circle at 33% 89%, rgba(50, 50, 60, 0.2) 2%, transparent 10%),
+        radial-gradient(circle at 80% 15%, rgba(50, 50, 60, 0.2) 2%, transparent 10%),
+        radial-gradient(circle at 15% 60%, rgba(50, 50, 60, 0.2) 2%, transparent 10%),
+        radial-gradient(circle at 65% 83%, rgba(50, 50, 60, 0.2) 2%, transparent 10%),
+        linear-gradient(to bottom right, var(--apple-dark), var(--apple-darker));
+    background-attachment: fixed;
+    background-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px, 40px 40px, 40px 40px, 40px 40px, 100% 100%;
+    padding-top: 90px; /* Increased padding to account for floating navbar */
+    line-height: 1.5;
+    letter-spacing: -0.01em;
 }
 
 /* Profile Image */
@@ -17,15 +41,17 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border: 4px solid white;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .profile-image-placeholder {
     width: 100%;
     height: 100%;
-    background-color: #f0f0f0;
-    border: 4px solid white;
-    color: #aaa;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    color: var(--apple-gray);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 768px) {
@@ -36,42 +62,49 @@ body {
     }
 }
 
-/* Frosted Glass Navbar */
+/* Floating Navbar */
 .navbar-frosted {
     background-color: rgba(255, 255, 255, 0.7) !important;
-    backdrop-filter: blur(10px) saturate(180%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%);
-    border-bottom: 1px solid rgba(209, 213, 219, 0.3);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    max-width: 1200px;
     z-index: 1030;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    border-radius: 16px;
+    padding: 0.5rem 1rem;
 }
 
 .navbar-frosted .navbar-brand {
-    color: #333;
+    color: var(--apple-dark);
     font-weight: 600;
     letter-spacing: -0.5px;
 }
 
 .navbar-frosted .nav-link {
-    color: #555;
+    color: var(--apple-dark);
     font-weight: 500;
     transition: color 0.2s ease;
     padding: 0.5rem 1rem;
     position: relative;
+    opacity: 0.8;
 }
 
 .navbar-frosted .nav-link:hover {
-    color: #007aff; /* Apple blue */
+    color: var(--apple-blue);
+    opacity: 1;
 }
 
 .navbar-frosted .nav-link.active {
-    color: #007aff;
+    color: var(--apple-blue);
     font-weight: 600;
+    opacity: 1;
 }
 
 .navbar-frosted .nav-link.active:after {
@@ -81,7 +114,7 @@ body {
     left: 1rem;
     right: 1rem;
     height: 2px;
-    background-color: #007aff;
+    background-color: var(--apple-blue);
     border-radius: 2px;
 }
 
@@ -96,105 +129,441 @@ body {
 }
 
 .navbar-frosted .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
-/* Dark mode support */
+/* Hero Section */
+.hero-section {
+    padding: 6rem 0;
+    text-align: center;
+}
+
+.hero-section h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(90deg, #fff, #a1a1a6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-section p {
+    font-size: 1.25rem;
+    color: #ffffff;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+
+/* Frosted Glass Cards */
+.card {
+    background-color: var(--apple-card-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--apple-darker);
+}
+
+.card-text {
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.card-footer {
+    background-color: transparent;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1rem 1.5rem;
+}
+
+.card-img-top {
+    height: 180px;
+    object-fit: cover;
+}
+
+/* Card Body Text */
+.card-body p, .card-body ul, .card-body li {
+    color: var(--apple-dark);
+}
+
+/* About Sections */
+.about-section p, .lead, .text-muted, .card-body .text-muted {
+    color: #ffffff !important;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 20px;
+    padding: 0.5rem 1.25rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--apple-blue);
+    border-color: var(--apple-blue);
+}
+
+.btn-primary:hover {
+    background-color: var(--apple-blue-hover);
+    border-color: var(--apple-blue-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 113, 227, 0.4);
+}
+
+.btn-outline-primary {
+    color: var(--apple-blue);
+    border-color: var(--apple-blue);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--apple-blue);
+    border-color: var(--apple-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 113, 227, 0.4);
+}
+
+.btn-secondary {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--apple-light);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-info {
+    background-color: rgba(0, 113, 227, 0.1);
+    border-color: rgba(0, 113, 227, 0.1);
+    color: var(--apple-blue);
+}
+
+.btn-info:hover {
+    background-color: rgba(0, 113, 227, 0.2);
+    border-color: rgba(0, 113, 227, 0.2);
+    color: var(--apple-blue);
+    transform: translateY(-2px);
+}
+
+.btn-sm {
+    border-radius: 15px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 0.4em 0.8em;
+    border-radius: 10px;
+}
+
+.badge.bg-primary {
+    background-color: var(--apple-blue) !important;
+}
+
+.badge.bg-secondary {
+    background-color: rgba(134, 134, 139, 0.8) !important;
+}
+
+.badge.bg-light {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    color: var(--apple-dark) !important;
+}
+
+/* Section Headings */
+section h2 {
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+    color: var(--apple-light);
+}
+
+/* Footer */
+footer {
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 3rem 0;
+    margin: 3rem auto 2rem;
+    width: 95%;
+    max-width: 1200px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+footer h5 {
+    font-weight: 600;
+    color: var(--apple-dark);
+    margin-bottom: 1.5rem;
+}
+
+footer a {
+    color: var(--apple-dark);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    opacity: 0.8;
+}
+
+footer a:hover {
+    color: var(--apple-blue);
+    opacity: 1;
+}
+
+footer .social-icons a {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+}
+
+/* Mobile Spacing */
+@media (max-width: 768px) {
+    .row.g-4 {
+        --bs-gutter-y: 1.5rem;
+    }
+    
+    .col-md-4.mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    .card {
+        margin-bottom: 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-section p {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Dark Mode Adjustments */
 @media (prefers-color-scheme: dark) {
+    .card {
+        background-color: var(--apple-card-dark-bg);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .card-title {
+        color: var(--apple-light);
+    }
+    
+    .card-text {
+        color: var(--apple-light);
+    }
+    
+    .card-body p, .card-body ul, .card-body li {
+        color: var(--apple-light);
+    }
+    
+    .card-footer {
+        border-top-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Extracurricular Activities */
+    .activity-skill {
+        background-color: rgba(10, 132, 255, 0.2);
+        color: #0a84ff;
+    }
+    
+    /* Fix for dark mode navbar */
     .navbar-frosted {
-        background-color: rgba(30, 30, 30, 0.7) !important;
-        border-bottom: 1px solid rgba(50, 50, 50, 0.3);
+        background-color: rgba(40, 40, 45, 0.8) !important;
+        border-color: rgba(255, 255, 255, 0.1);
     }
     
-    .navbar-frosted .navbar-brand {
-        color: #f8f9fa;
-    }
-    
+    .navbar-frosted .navbar-brand,
     .navbar-frosted .nav-link {
-        color: #e2e2e2;
-    }
-    
-    .navbar-frosted .nav-link:hover,
-    .navbar-frosted .nav-link.active {
-        color: #0a84ff; /* Apple blue for dark mode */
+        color: var(--apple-light);
     }
     
     .navbar-frosted .navbar-toggler-icon {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
     }
+    
+    /* Footer dark mode */
+    footer {
+        background-color: rgba(40, 40, 45, 0.8) !important;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    footer h5 {
+        color: var(--apple-light);
+    }
+    
+    footer a {
+        color: var(--apple-gray);
+    }
+    
+    footer a:hover {
+        color: var(--apple-light);
+    }
+    
+    /* Admin sidebar dark mode */
+    .sidebar {
+        background-color: rgba(40, 40, 45, 0.8) !important;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar .nav-link {
+        color: var(--apple-gray);
+    }
+    
+    .sidebar .nav-link:hover {
+        background-color: rgba(10, 132, 255, 0.2);
+        color: var(--apple-light);
+    }
+    
+    .sidebar .nav-link.active {
+        background-color: rgba(10, 132, 255, 0.3);
+        color: #0a84ff;
+    }
+    
+    .sidebar-heading {
+        color: var(--apple-light) !important;
+    }
+    
+    /* Admin content area dark mode */
+    .admin-content {
+        background-color: rgba(40, 40, 45, 0.8) !important;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
 }
 
-/* Hero Section */
-.hero-section {
-    background-color: #f8f9fa;
-    padding: 5rem 0;
-    margin-bottom: 2rem;
+/* Admin Sidebar */
+.sidebar {
+    position: sticky;
+    top: 90px; /* Account for floating navbar */
+    height: calc(100vh - 90px);
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    margin-right: 15px;
+    padding: 1rem;
+    align-self: flex-start; /* Ensure sidebar stays at the top */
 }
 
-/* Card Styles */
-.card {
-    border: none;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin-bottom: 1.5rem;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
-
-.card-img-top {
-    height: 200px;
-    object-fit: cover;
-}
-
-/* Button Styles */
-.btn {
-    border-radius: 0.25rem;
-    padding: 0.5rem 1.5rem;
+.sidebar .nav-link {
+    color: var(--apple-dark);
     font-weight: 500;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    transition: all 0.2s ease;
+    opacity: 0.8;
 }
 
-.btn-primary {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+.sidebar .nav-link:hover {
+    background-color: rgba(0, 113, 227, 0.1);
+    color: var(--apple-blue);
+    opacity: 1;
 }
 
-.btn-primary:hover {
-    background-color: #0b5ed7;
-    border-color: #0a58ca;
+.sidebar .nav-link.active {
+    background-color: rgba(0, 113, 227, 0.2);
+    color: var(--apple-blue);
+    font-weight: 600;
+    opacity: 1;
 }
 
-/* Footer Styles */
-footer {
-    margin-top: 3rem;
+.sidebar-heading {
+    color: var(--apple-dark) !important;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
 }
 
-footer a {
-    text-decoration: none;
+/* Admin Content Area */
+.admin-content {
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    min-height: calc(100vh - 150px); /* Ensure minimum height */
 }
 
-footer a:hover {
-    text-decoration: underline;
+/* Admin layout specific styles */
+.admin-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
 }
 
-/* Admin Dashboard */
-.dashboard-card {
-    border-radius: 0.5rem;
-    border: none;
-    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+.admin-sidebar-col {
+    flex: 0 0 auto;
+    width: 16.666667%;
+    max-width: 250px;
 }
 
-/* Blog Post */
-.blog-content {
-    line-height: 1.8;
+.admin-content-col {
+    flex: 1;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
-.blog-content img {
-    max-width: 100%;
-    height: auto;
-    margin: 1.5rem 0;
+@media (max-width: 768px) {
+    .sidebar {
+        margin-bottom: 1rem;
+        margin-right: 0;
+        height: auto;
+        position: relative;
+        top: 0;
+    }
+    
+    .admin-content {
+        min-height: auto; /* Reset min-height on mobile */
+    }
+    
+    .admin-sidebar-col, 
+    .admin-content-col {
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+    }
+    
+    .admin-container {
+        display: block;
+    }
 }
 
 /* Project Detail */
@@ -286,24 +655,6 @@ footer a:hover {
     outline: none;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .card-img-top {
-        height: 180px;
-    }
-    
-    #projectsCarousel .carousel-control-prev,
-    #projectsCarousel .carousel-control-next {
-        display: none;
-    }
-}
-
-@media (max-width: 576px) {
-    .btn {
-        padding: 0.375rem 1rem;
-    }
-}
-
 /* Extracurricular Activities */
 .activity-period {
     font-size: 0.85rem;
@@ -321,7 +672,6 @@ footer a:hover {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-top: 1rem;
 }
 
 .activity-skill {
@@ -333,63 +683,54 @@ footer a:hover {
     font-weight: 500;
 }
 
-@media (prefers-color-scheme: dark) {
-    .activity-skill {
-        background-color: rgba(10, 132, 255, 0.2);
-        color: #0a84ff;
-    }
-}
-
-/* Admin Sidebar */
-.sidebar {
-    position: sticky;
-    top: 70px; /* Account for fixed navbar */
-    height: calc(100vh - 70px);
-    overflow-y: auto;
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-}
-
-.sidebar .nav-link {
-    color: #555;
+/* Form styling for dark backgrounds */
+.form-label {
+    color: var(--apple-dark);
     font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    margin-bottom: 0.25rem;
 }
 
-.sidebar .nav-link:hover {
-    background-color: rgba(0, 122, 255, 0.1);
-    color: #007aff;
+.form-text.text-muted {
+    color: var(--apple-dark) !important;
+    opacity: 0.8;
 }
 
-.sidebar .nav-link.active {
-    background-color: rgba(0, 122, 255, 0.15);
-    color: #007aff;
-    font-weight: 600;
-}
-
-@media (max-width: 768px) {
-    .sidebar {
-        position: relative;
-        top: 0;
-        height: auto;
-        margin-bottom: 1rem;
-    }
-}
-
+/* Dark mode form styling */
 @media (prefers-color-scheme: dark) {
-    .sidebar {
-        background-color: #222 !important;
-        box-shadow: inset -1px 0 0 rgba(255, 255, 255, .1);
+    .form-label {
+        color: var(--apple-light) !important;
     }
     
-    .sidebar .nav-link {
-        color: #e2e2e2;
+    .form-text.text-muted {
+        color: var(--apple-light) !important;
+        opacity: 0.8;
     }
     
-    .sidebar .nav-link:hover,
-    .sidebar .nav-link.active {
-        background-color: rgba(10, 132, 255, 0.2);
-        color: #0a84ff;
+    .modal-content {
+        background-color: rgba(40, 40, 45, 0.95);
+        color: var(--apple-light);
+    }
+    
+    .modal-header, .modal-footer {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .table {
+        color: var(--apple-light);
+    }
+    
+    .breadcrumb-item, .breadcrumb-item.active {
+        color: var(--apple-light);
+    }
+    
+    .breadcrumb-item a {
+        color: var(--apple-blue);
+    }
+    
+    .card-header h4, .card-header h5 {
+        color: var(--apple-light);
+    }
+    
+    .invalid-feedback {
+        color: #ff453a;
     }
 } 

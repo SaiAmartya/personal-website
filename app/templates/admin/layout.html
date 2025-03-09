@@ -2,13 +2,10 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="row">
+    <div class="admin-container">
         <!-- Admin Sidebar -->
-        <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-3">
-            <div class="position-sticky">
-                <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>Admin Panel</span>
-                </h5>
+        <div class="admin-sidebar-col">
+            <div class="sidebar">
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == url_for('admin.dashboard') %}active{% endif %}" href="{{ url_for('admin.dashboard') }}">
@@ -74,8 +71,10 @@
         </div>
         
         <!-- Main Content -->
-        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-            {% block admin_content %}{% endblock %}
+        <div class="admin-content-col">
+            <div class="admin-content">
+                {% block admin_content %}{% endblock %}
+            </div>
         </div>
     </div>
 </div>
