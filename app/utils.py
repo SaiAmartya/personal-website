@@ -6,9 +6,38 @@ from email.mime.multipart import MIMEMultipart
 from flask import current_app
 from PIL import Image
 from datetime import datetime
+import cloudinary
+import cloudinary.uploader
 
 def save_image(form_image, folder='uploads'):
     """Save uploaded image and return the filename"""
+    # Check if we're running on Vercel (production)
+    if os.getenv('VERCEL_ENV') or os.getenv('VERCEL'):
+        try:
+            # Configure Cloudinary if not already configured
+            if not hasattr(current_app, 'cloudinary_configured'):
+                cloudinary.config(
+                    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
+                    api_key=os.getenv('CLOUDINARY_API_KEY'),
+                    api_secret=os.getenv('CLOUDINARY_API_SECRET')
+                )
+                current_app.cloudinary_configured = True
+            
+            # Upload to Cloudinary
+            upload_result = cloudinary.uploader.upload(
+                form_image,
+                folder=folder,
+                resource_type="auto"
+            )
+            
+            # Return the secure URL from Cloudinary
+            return upload_result['secure_url']
+        except Exception as e:
+            print(f"Cloudinary upload error: {e}")
+            # Fall back to local storage if Cloudinary fails
+            pass
+    
+    # Local storage for development environment
     random_hex = secrets.token_hex(8)
     _, file_ext = os.path.splitext(form_image.filename)
     image_filename = random_hex + file_ext

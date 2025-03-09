@@ -6,6 +6,7 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
+import cloudinary
 
 # Load environment variables
 load_dotenv()
@@ -29,6 +30,19 @@ def create_app():
     app.config['MONGODB_URI'] = os.getenv('MONGODB_URI')
     app.mongo_client = MongoClient(app.config['MONGODB_URI'])
     app.db = app.mongo_client.personal_site
+    
+    # Initialize Cloudinary if credentials are available
+    if os.getenv('CLOUDINARY_CLOUD_NAME') and os.getenv('CLOUDINARY_API_KEY') and os.getenv('CLOUDINARY_API_SECRET'):
+        cloudinary.config(
+            cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
+            api_key=os.getenv('CLOUDINARY_API_KEY'),
+            api_secret=os.getenv('CLOUDINARY_API_SECRET')
+        )
+        app.cloudinary_configured = True
+        print("Cloudinary configured successfully")
+    else:
+        app.cloudinary_configured = False
+        print("Cloudinary not configured - using local file storage")
     
     # Initialize extensions with app
     login_manager.init_app(app)
