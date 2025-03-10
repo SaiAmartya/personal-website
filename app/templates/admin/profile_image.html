@@ -50,7 +50,7 @@
                     <div class="text-center">
                         {% if profile_image %}
                             <div class="mb-3">
-                                <img src="{{ url_for('static', filename=profile_image) }}" alt="Profile Image" class="img-fluid rounded-circle border" style="width: 200px; height: 200px; object-fit: cover;">
+                                <img src="{{ get_image_url(profile_image) }}" alt="Profile Image" class="img-fluid rounded-circle border" style="width: 200px; height: 200px; object-fit: cover;">
                             </div>
                             <p class="text-success">Your profile image is currently set and will be displayed on the home page.</p>
                         {% else %}
@@ -67,7 +67,7 @@
                             <div class="row align-items-center">
                                 <div class="col-4">
                                     {% if profile_image %}
-                                        <img src="{{ url_for('static', filename=profile_image) }}" alt="Profile Image" class="img-fluid rounded-circle border" style="width: 80px; height: 80px; object-fit: cover;">
+                                        <img src="{{ get_image_url(profile_image) }}" alt="Profile Image" class="img-fluid rounded-circle border" style="width: 80px; height: 80px; object-fit: cover;">
                                     {% else %}
                                         <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
                                             <i class="fas fa-user fa-2x text-muted"></i>

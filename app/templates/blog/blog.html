@@ -8,9 +8,15 @@
             
             {% if blog_posts %}
                 {% for post in blog_posts %}
-                    <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card h-100 shadow-sm">
                         {% if post.image_url %}
-                            <img src="{{ url_for('static', filename=post.image_url) }}" class="card-img-top" alt="{{ post.title }}">
+                            <img src="{{ get_image_url(post.image_url) }}" class="card-img-top" alt="{{ post.title }}">
+                        {% else %}
+                            <div class="bg-light text-center py-5">
+                                <i class="fas fa-blog fa-4x text-muted mb-4"></i>
+                                <h3>No Image Available</h3>
+                                <p class="text-muted">This post does not have an image.</p>
+                            </div>
                         {% endif %}
                         <div class="card-body">
                             <h2 class="card-title h4">{{ post.title }}</h2>

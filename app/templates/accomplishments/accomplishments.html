@@ -14,9 +14,9 @@
                 {% if accomplishments %}
                     {% for accomplishment in accomplishments %}
                         <div class="col-md-6 mb-4">
-                            <div class="card h-100">
+                            <div class="card h-100 shadow-sm">
                                 {% if accomplishment.image_url %}
-                                    <img src="{{ url_for('static', filename=accomplishment.image_url) }}" class="card-img-top" alt="{{ accomplishment.title }}">
+                                    <img src="{{ get_image_url(accomplishment.image_url) }}" class="card-img-top" alt="{{ accomplishment.title }}">
                                 {% else %}
                                     <div class="bg-light text-center py-5">
                                         <i class="fas fa-award fa-3x text-secondary"></i>

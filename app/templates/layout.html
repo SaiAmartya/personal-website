@@ -122,6 +122,34 @@
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     
+    <!-- Modal Fix Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fix for modal backdrop issues
+            document.body.addEventListener('show.bs.modal', function (event) {
+                // Remove any existing backdrops to prevent stacking
+                const existingBackdrops = document.querySelectorAll('.modal-backdrop');
+                existingBackdrops.forEach(backdrop => {
+                    backdrop.remove();
+                });
+            });
+            
+            // Fix for modal not closing properly
+            document.body.addEventListener('hidden.bs.modal', function (event) {
+                // Remove modal-open class and inline styles from body
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+                
+                // Remove any lingering backdrops
+                const existingBackdrops = document.querySelectorAll('.modal-backdrop');
+                existingBackdrops.forEach(backdrop => {
+                    backdrop.remove();
+                });
+            });
+        });
+    </script>
+    
     <!-- Theme Toggle Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {

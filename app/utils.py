@@ -3,7 +3,7 @@ import secrets
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from flask import current_app
+from flask import current_app, url_for
 from PIL import Image
 from datetime import datetime
 import cloudinary
@@ -92,4 +92,18 @@ def format_date(date):
         except ValueError:
             return date
     
-    return date.strftime('%B %d, %Y') 
+    return date.strftime('%B %d, %Y')
+
+def get_image_url(image_path):
+    """
+    Helper function to get the correct image URL whether it's stored locally or on Cloudinary
+    """
+    if not image_path:
+        return None
+        
+    # Check if it's a Cloudinary URL (starts with http or https)
+    if image_path.startswith('http://') or image_path.startswith('https://'):
+        return image_path
+    
+    # Otherwise, it's a local path, so use url_for
+    return url_for('static', filename=image_path) 

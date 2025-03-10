@@ -14,7 +14,7 @@
             
             <div class="card border-0 shadow-sm mb-4">
                 {% if accomplishment.image_url %}
-                    <img src="{{ url_for('static', filename=accomplishment.image_url) }}" class="card-img-top" alt="{{ accomplishment.title }}">
+                    <img src="{{ get_image_url(accomplishment.image_url) }}" class="card-img-top" alt="{{ accomplishment.title }}">
                 {% else %}
                     <div class="bg-light text-center py-5">
                         <i class="fas fa-award fa-5x text-secondary"></i>

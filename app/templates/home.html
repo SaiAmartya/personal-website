@@ -16,7 +16,7 @@
         <div class="col-lg-4 col-md-4 d-flex align-items-center justify-content-center mt-4 mt-md-0">
             <div class="profile-image-container">
                 {% if profile_image %}
-                    <img src="{{ url_for('static', filename=profile_image) }}" alt="Sai Amartya" class="profile-image img-fluid rounded-circle shadow">
+                    <img src="{{ get_image_url(profile_image) }}" alt="Sai Amartya" class="profile-image img-fluid rounded-circle shadow">
                 {% else %}
                     <div class="profile-image-placeholder rounded-circle shadow d-flex align-items-center justify-content-center">
                         <i class="fas fa-user fa-4x text-muted"></i>
@@ -40,7 +40,7 @@
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 shadow-sm">
                         {% if project.image_url %}
-                            <img src="{{ url_for('static', filename=project.image_url) }}" class="card-img-top" alt="{{ project.title }}">
+                            <img src="{{ get_image_url(project.image_url) }}" class="card-img-top" alt="{{ project.title }}">
                         {% else %}
                             <div class="bg-light text-center py-5">
                                 <i class="fas fa-code fa-3x text-secondary"></i>
@@ -80,7 +80,7 @@
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 shadow-sm">
                         {% if accomplishment.image_url %}
-                            <img src="{{ url_for('static', filename=accomplishment.image_url) }}" class="card-img-top" alt="{{ accomplishment.title }}">
+                            <img src="{{ get_image_url(accomplishment.image_url) }}" class="card-img-top" alt="{{ accomplishment.title }}">
                         {% else %}
                             <div class="bg-light text-center py-5">
                                 <i class="fas fa-award fa-3x text-secondary"></i>
@@ -173,7 +173,7 @@
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 shadow-sm">
                         {% if post.image_url %}
-                            <img src="{{ url_for('static', filename=post.image_url) }}" class="card-img-top" alt="{{ post.title }}">
+                            <img src="{{ get_image_url(post.image_url) }}" class="card-img-top" alt="{{ post.title }}">
                         {% else %}
                             <div class="bg-light text-center py-5">
                                 <i class="fas fa-blog fa-3x text-secondary"></i>

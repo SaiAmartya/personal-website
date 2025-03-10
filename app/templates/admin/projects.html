@@ -48,11 +48,9 @@
                                             </td>
                                             <td>
                                                 {% if project.image_url %}
-                                                    <img src="{{ url_for('static', filename=project.image_url) }}" alt="{{ project.title }}" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                                                    <img src="{{ get_image_url(project.image_url) }}" alt="{{ project.title }}" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
                                                 {% else %}
-                                                    <div class="bg-light d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                                        <i class="fas fa-code text-muted"></i>
-                                                    </div>
+                                                    <i class="fas fa-code fa-2x text-muted"></i>
                                                 {% endif %}
                                             </td>
                                             <td>{{ project.title }}</td>

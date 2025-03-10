@@ -91,9 +91,11 @@ def create_app():
     # Add context processor for template variables
     @app.context_processor
     def inject_now():
+        from app.utils import get_image_url
         return {
             'now': datetime.now(),
-            'tinymce_api_key': os.getenv('TINYMCE_API_KEY', '')
+            'tinymce_api_key': os.getenv('TINYMCE_API_KEY', ''),
+            'get_image_url': get_image_url
         }
     
     return app 

@@ -141,31 +141,9 @@
                                             <td>{{ message.subject }}</td>
                                             <td>{{ message.created_at.strftime('%Y-%m-%d %H:%M') if message.created_at else '' }}</td>
                                             <td>
-                                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#messageModal{{ message._id }}">
+                                                <button type="button" class="btn btn-sm btn-primary view-message-btn" data-bs-toggle="modal" data-bs-target="#messageModal{{ message._id }}">
                                                     View
                                                 </button>
-                                                
-                                                <!-- Message Modal -->
-                                                <div class="modal fade" id="messageModal{{ message._id }}" tabindex="-1" aria-labelledby="messageModalLabel{{ message._id }}" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="messageModalLabel{{ message._id }}">{{ message.subject }}</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <p><strong>From:</strong> {{ message.name }} ({{ message.email }})</p>
-                                                                <p><strong>Date:</strong> {{ message.created_at.strftime('%Y-%m-%d %H:%M') if message.created_at else '' }}</p>
-                                                                <hr>
-                                                                <p>{{ message.message }}</p>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                <a href="mailto:{{ message.email }}" class="btn btn-primary">Reply</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -183,4 +161,53 @@
         </div>
     </div>
 </div>
+
+<!-- Message Modals - Moved outside the table for better DOM structure -->
+{% for message in recent_messages %}
+<div class="modal fade message-modal" id="messageModal{{ message._id }}" tabindex="-1" aria-labelledby="messageModalLabel{{ message._id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messageModalLabel{{ message._id }}">{{ message.subject }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>From:</strong> {{ message.name }} ({{ message.email }})</p>
+                <p><strong>Date:</strong> {{ message.created_at.strftime('%Y-%m-%d %H:%M') if message.created_at else '' }}</p>
+                <hr>
+                <p>{{ message.message }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="mailto:{{ message.email }}" class="btn btn-primary">Reply</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize all modals
+        var messageModals = document.querySelectorAll('.message-modal');
+        messageModals.forEach(function(modalEl) {
+            var modal = new bootstrap.Modal(modalEl);
+            
+            // Add event listener to properly clean up when modal is hidden
+            modalEl.addEventListener('hidden.bs.modal', function() {
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+                
+                // Remove any lingering backdrops
+                const existingBackdrops = document.querySelectorAll('.modal-backdrop');
+                existingBackdrops.forEach(backdrop => {
+                    backdrop.remove();
+                });
+            });
+        });
+    });
+</script>
 {% endblock %} 

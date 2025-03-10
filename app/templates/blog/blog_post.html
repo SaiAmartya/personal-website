@@ -30,7 +30,7 @@
                 </div>
                 
                 {% if post.image_url %}
-                    <img src="{{ url_for('static', filename=post.image_url) }}" class="img-fluid rounded mb-4" alt="{{ post.title }}">
+                    <img src="{{ get_image_url(post.image_url) }}" class="img-fluid rounded mb-4" alt="{{ post.title }}">
                 {% endif %}
                 
                 <div class="blog-content">
@@ -52,9 +52,9 @@
                             <div class="col-md-4 mb-4">
                                 <div class="card h-100">
                                     {% if related.image_url %}
-                                        <img src="{{ url_for('static', filename=related.image_url) }}" class="card-img-top" alt="{{ related.title }}">
+                                        <img src="{{ get_image_url(related.image_url) }}" class="card-img-top" alt="{{ related.title }}">
                                     {% else %}
-                                        <div class="bg-light text-center py-4">
+                                        <div class="bg-light text-center py-5">
                                             <i class="fas fa-blog fa-2x text-secondary"></i>
                                         </div>
                                     {% endif %}

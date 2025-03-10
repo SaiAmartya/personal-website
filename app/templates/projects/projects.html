@@ -10,9 +10,9 @@
                 {% if projects %}
                     {% for project in projects %}
                         <div class="col-md-6 mb-4">
-                            <div class="card h-100">
+                            <div class="card h-100 shadow-sm">
                                 {% if project.image_url %}
-                                    <img src="{{ url_for('static', filename=project.image_url) }}" class="card-img-top" alt="{{ project.title }}">
+                                    <img src="{{ get_image_url(project.image_url) }}" class="card-img-top" alt="{{ project.title }}">
                                 {% else %}
                                     <div class="bg-light text-center py-5">
                                         <i class="fas fa-code fa-3x text-secondary"></i>

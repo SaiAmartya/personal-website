@@ -103,9 +103,9 @@
                                 </div>
                             {% endif %}
                             {% if accomplishment and accomplishment.image_url %}
-                                <div class="mt-2">
+                                <div class="mb-3">
                                     <p>Current image:</p>
-                                    <img src="{{ url_for('static', filename=accomplishment.image_url) }}" alt="Current accomplishment image" class="img-thumbnail" style="max-height: 200px;">
+                                    <img src="{{ get_image_url(accomplishment.image_url) }}" alt="Current accomplishment image" class="img-thumbnail" style="max-height: 200px;">
                                 </div>
                             {% endif %}
                         </div>
