@@ -257,13 +257,16 @@ body {
 .hero-section .btn-info {
     background-color: rgba(0, 113, 227, 0.7);
     border-color: rgba(0, 113, 227, 0.7);
-    color: var(--hero-btn-text-color);
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    color: #ffffff;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hero-section .btn-info:hover {
     background-color: rgba(0, 113, 227, 0.9);
     border-color: rgba(0, 113, 227, 0.9);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 113, 227, 0.4);
 }
 
 /* Frosted Glass Cards */
@@ -462,6 +465,13 @@ footer a:hover {
 footer .social-icons a {
     font-size: 1.5rem;
     margin-right: 1rem;
+}
+
+/* Footer styles */
+.footer-heading {
+    color: #ffffff !important;
+    font-weight: 600;
+    margin-bottom: 1rem;
 }
 
 /* Mobile Spacing */
